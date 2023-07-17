@@ -6,6 +6,25 @@ import { Link } from 'react-router-dom';
 export default function CreateProduct() {
   const { register, handleSubmit } = useForm();
   const [productId, setProductId] = useState(null);
+  const [previewImages, setPreviewImages] = useState([]);
+
+  const handleImageChange = (e) => {
+    const files = [...e.target.files];
+
+    const images = [];
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        images.push(ev.target.result);
+
+        if (images.length === files.length) {
+          setPreviewImages(images);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   async function submitHandler(formData) {
     try {
@@ -17,7 +36,7 @@ export default function CreateProduct() {
 
       setProductId(data.id);
 
-      console.log('Your image upload is successful');
+      alert('Your image upload is successful');
     } catch (error) {
       console.error(error);
     }
@@ -35,7 +54,22 @@ export default function CreateProduct() {
           <textarea id="description" rows="4" {...register('description')}></textarea>
         </div>
         <label htmlFor="images">Upload Images</label>
-        <input type="file" id="images" {...register('images[]')} accept="image/*" multiple={true} />
+        <input
+          type="file"
+          id="images"
+          {...register('images[]')}
+          accept="image/*"
+          multiple={true}
+          onChange={handleImageChange}
+        />
+        {previewImages.length > 0 && (
+          <div>
+            <p>Preview:</p>
+            {previewImages.map((image, index) => (
+              <img key={index} src={image} alt={`Preview ${index}`} width="100" height="100" />
+            ))}
+          </div>
+        )}
         <button>Upload</button>
       </form>
       {productId && <Link to={`/products/${productId}`}>See your uploaded image</Link>}
