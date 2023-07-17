@@ -3,40 +3,25 @@ import axiosClient from '../services/axiosClient';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function UploadImage() {
+export default function CreateProduct() {
   const { register, handleSubmit } = useForm();
   const [productId, setProductId] = useState(null);
 
-  async function storeImage(data) {
+  async function submitHandler(formData) {
     try {
-      const formData = new FormData();
-      if (data.images && data.images.length > 0) {
-        for (let i = 0; i < data.images.length; i++) {
-          formData.append('images[]', data.images[i]);
-        }
-      }
-      formData.append('name', data.name);
-      formData.append('description', data.description);
-
-      const response = await axiosClient.post('/addProduct', formData, {
+      const { data } = await axiosClient.post('/addProduct', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      setProductId(response.data.id);
+      setProductId(data.id);
 
       console.log('Your image upload is successful');
     } catch (error) {
       console.error(error);
     }
   }
-
-  function submitHandler(data) {
-    storeImage(data);
-  }
-
-  console.log(productId);
 
   return (
     <>
@@ -50,7 +35,7 @@ export default function UploadImage() {
           <textarea id="description" rows="4" {...register('description')}></textarea>
         </div>
         <label htmlFor="images">Upload Images</label>
-        <input type="file" id="images" {...register('images')} accept="image/png" multiple={true} />
+        <input type="file" id="images" {...register('images[]')} accept="image/*" multiple={true} />
         <button>Upload</button>
       </form>
       {productId && <Link to={`/products/${productId}`}>See your uploaded image</Link>}

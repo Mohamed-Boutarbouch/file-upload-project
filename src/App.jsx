@@ -1,24 +1,24 @@
 import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import UploadImage from './pages/UploadImage';
-import ProductPage from './pages/ProductPage';
+import CreateProduct from './pages/CreateProduct';
+import ShowProduct from './pages/ShowProduct';
 
 export default function App() {
   const router = createBrowserRouter([
     {
       path: '/',
       element: (
-        <Link className="mx-auto" to="/upload-image">
-          Upload your image here
+        <Link className="mx-auto" to="/create-product">
+          Go to Product Creation Page
         </Link>
       ),
     },
     {
-      path: '/upload-image',
-      element: <UploadImage />,
+      path: '/create-product',
+      element: <CreateProduct />,
     },
     {
       path: '/products/:id',
-      element: <ProductPage />,
+      element: <ShowProduct />,
     },
   ]);
 

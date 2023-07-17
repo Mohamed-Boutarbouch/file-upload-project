@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axiosClient from '../services/axiosClient';
 
-export default function ProductPage() {
+export default function ShowProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const ApiBaseUrl = import.meta.env.VITE_LARAVEL_API_BASE_URL;
 
   useEffect(() => {
     async function fetchProduct() {
@@ -33,11 +34,14 @@ export default function ProductPage() {
         {product.images.map((image) => (
           <img
             key={image.id}
-            src={`http://127.0.0.1:8000/${image.url}`}
+            src={`${ApiBaseUrl}/${image.url}`}
             alt={`Product Image ${image.id}`}
           />
         ))}
       </div>
+      <Link className="mx-auto" to="/create-product">
+        Creation Another Product
+      </Link>
     </div>
   );
 }
